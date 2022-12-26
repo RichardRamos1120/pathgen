@@ -50,10 +50,10 @@
 		<div class='add-new-question-box'>
 			<h2 class='add-new-question-box-title'>Add New Question</h2>
 			<div class='add-new-question-box-btns'>
-				<button class='add-new-question-btn short-btn'>Short <img src='/img/short-btn.svg' alt=''></button>
-				<button class='add-new-question-btn long-btn'>Long <img src='/img/long-btn.svg' alt=''></button>
-				<button class='add-new-question-btn info-btn'>Info <img src='/img/info-btn.svg' alt=''></button>
-				<button class='add-new-question-btn multi-btn'>Multi <img src='/img/multi-btn.svg' alt=''></button>
+				<button class='add-new-question-btn short-btn'><img src='/img/short-btn.svg' alt=''>Short</button>
+				<button class='add-new-question-btn long-btn'><img src='/img/long-btn.svg' alt=''>Long</button>
+				<button class='add-new-question-btn info-btn'><img src='/img/info-btn.svg' alt=''>Info</button>
+				<button class='add-new-question-btn multi-btn'><img src='/img/multi-btn.svg' alt=''>Multi</button>
 			</div>
 		</div>
 	</div>
