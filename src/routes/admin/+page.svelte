@@ -1,248 +1,223 @@
 <script>
-
 </script>
 
 
 <main class='main'>
-	<div class='main-form'>
-		<div class='ques-res-box'>
-			<button class='question-selected question-btn'>Questions</button>
-			<button class='response-btn'>Responses</button>
+	<div class='form-list'>
+
+		<div class='form-list-individual--create'>
+			<p class='form-list-individual-title'>+ Create a form</p>
 		</div>
-		<div class='question-box'>
-			<h2 class='question-box-title'>
-				<span class='question-box-title--primary'><span class='small-text-question'>1</span>What's your name?</span><span class='question-box-title--secondary'>*</span>
-			</h2>
-			<div class='question-input-box'>
-				<div class='question-input-box-btn'>
-					<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
-					<button class='question-input-box-btn-menu'><img src='/img/menu.svg' alt=''></button>
-				</div>
-				<input type='text' placeholder='Click to add placeholder text' class='question-input'>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>CoolClub Application</p>
+				<small class='form-list-individual-date'>Updated 2 days ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/unpublish.svg' alt=''>
+				</span>
 			</div>
 		</div>
-		<div class='question-box question-box-margin-top'>
-			<h2 class='question-box-title'>
-				<span class='question-box-title--primary'><span class='small-text-question'>2</span>Tell us about yourself</span>
-			</h2>
-			<div class='question-input-box'>
-				<div class='question-input-box-btn'>
-					<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
-					<button class='question-input-box-btn-menu'><img src='/img/menu.svg' alt=''></button>
-				</div>
-				<input type='text' placeholder='Click to add placeholder text' class='question-input'>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>Hackathon UX Research</p>
+				<small class='form-list-individual-date'>Updated a week ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-published'>PUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/publish.svg' alt=''>
+				</span>
 			</div>
 		</div>
-		<div class='question-box question-box-margin-top'>
-			<h2 class='question-box-title'>
-				<span class='question-box-title--primary'><span class='small-text-question'>3</span>Lorem ipsum dolor sit amet.</span>
-			</h2>
-			<div class='question-input-box'>
-				<div class='question-input-box-btn'>
-					<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
-					<button class='question-input-box-btn-menu'><img src='/img/menu.svg' alt=''></button>
-				</div>
-				<button class='question-branch-btn question-branch-option'>Okay <img src='/img/close-btn.svg' alt=''></button>
-				<button class='question-branch-btn question-branch-option'>No <img src='/img/close-btn.svg' alt=''></button>
-				<button class='question-branch-btn question-branch-add'>Add Option</button>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>CoolClub Application</p>
+				<small class='form-list-individual-date'>Updated 2 days ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/unpublish.svg' alt=''>
+				</span>
 			</div>
 		</div>
-		<div class='add-new-question-box'>
-			<h2 class='add-new-question-box-title'>Add New Question</h2>
-			<div class='add-new-question-box-btns'>
-				<button class='add-new-question-btn short-btn'><img src='/img/short-btn.svg' alt=''>Short</button>
-				<button class='add-new-question-btn long-btn'><img src='/img/long-btn.svg' alt=''>Long</button>
-				<button class='add-new-question-btn info-btn'><img src='/img/info-btn.svg' alt=''>Info</button>
-				<button class='add-new-question-btn multi-btn'><img src='/img/multi-btn.svg' alt=''>Multi</button>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>Hackathon UX Research</p>
+				<small class='form-list-individual-date'>Updated a week ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-published'>PUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/publish.svg' alt=''>
+				</span>
 			</div>
 		</div>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>CoolClub Application</p>
+				<small class='form-list-individual-date'>Updated 2 days ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/unpublish.svg' alt=''>
+				</span>
+			</div>
+		</div>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>Hackathon UX Research</p>
+				<small class='form-list-individual-date'>Updated a week ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-published'>PUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/publish.svg' alt=''>
+				</span>
+			</div>
+		</div>
+
+		<div class='form-list-individual'>
+			<div class='form-list-individual-status'>
+				<p class='form-list-individual-title'>Hackathon UX Research</p>
+				<small class='form-list-individual-date'>Updated a week ago</small>
+			</div>
+			<div class='form-list-individual-state'>
+				<span class='form-list-individual-state-published'>PUBLISHED</span>
+				<span class='form-list-individual-state-delete'>
+					<img src='/img/publish.svg' alt=''>
+				</span>
+			</div>
+		</div>
+
 	</div>
 </main>
 
-
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-	*{
-			background-color: transparent;
-			outline: none;
-			border: none;
-			box-sizing: border-box;
-			padding: 0;
-			margin: 0;
-			user-select: none;
-      font-family: 'Inter', sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+    *{
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        text-decoration: none;
+        user-select: none;
+    }
+		.form-list{
+				width: 100%;
+				display: flex;
+				justify-content:left;
+				align-items: center;
+				gap: 24px;
+				padding: 56px;
+				flex-wrap: wrap;
 
-	}
-	button{
-      cursor: pointer;
-	}
-	main{
-			display: flex;
-			align-items: center;
-			justify-content: center;
+		}
+		.form-list-individual,.form-list-individual--create{
+				display: flex;
+				flex-direction: column;
+        border-radius: 4px;
+				width: 240px;
+				height: 160px;
 
-	}
-	.add-new-question-box{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
-			width: 100%;
-			margin-top: 64px;
-			gap: 16px;
 
-	}
-	.add-new-question-box-btns{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 12px;
+    }
+		.form-list-individual{
+        background: #FFFFFF;
+        box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+        justify-content: space-between;
+				align-items: center;
+				padding: 16px;
 
-	}
-	.add-new-question-btn{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-direction: column;
-			padding: 22px 36px;
-			gap: 12px;
-      border: 0.990099px solid #CCCCCC;
-      border-radius: 3.9604px;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      text-align: center;
-      color: #111111;
+    }
+		.form-list-individual--create{
+				cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #CCCCCC;
+		}
+		.form-list-individual-state{
+				display: flex;
+				width: 100%;
+				justify-content: space-between;
+				align-items: center;
+		}
+		.form-list-individual-status{
+				width: 100%;
+		}
+		.form-list-individual-status .form-list-individual-title{
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 22px;
 
-	}
-	.add-new-question-box-title{
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      text-align: center;
-      color: #111111;
-	}
-	.main-form{
+        /* Black */
 
-			margin-top: 56px;
-      width:444px;
-      position: relative;
-	}
-	.ques-res-box{
-			margin-left: 8px;
-			margin-bottom: 40px;
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			align-items: center;
+        color: #111111;
+		}
+		.form-list-individual-title{
+        cursor: pointer;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+        /* identical to box height */
 
-	}
-	.response-btn,.question-btn{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-      cursor: pointer;
-			border:none;
-			outline: none;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      text-align: center;
-			background-color: transparent;
-			padding: 8px 16px;
+        display: flex;
+        align-items: center;
 
-      color: #888888;
+        /* Secondary Black */
 
-      border-radius: 4px;
-	}
-	.question-selected{
-      /* Black */
-      color: #111111;
-			background: #F0F0F0;
-	}
-	.small-text-question{
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      text-align: right;
-      color: #888888;
-      transform: rotate(-0.01deg);
-	}
-  .question-box-title--secondary{
-      color: #CF5D5D;
-  }
-	.question-box-title--primary{
-      color: #111111;
-	}
-	.question-box-title--primary,.question-box-title--secondary{
-      font-style: normal;
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 29px;
-      transform: rotate(-0.01deg);
-	}
-	.question-box{
-			display: flex;
-			flex-direction: column;
-			align-items: baseline;
-			justify-content: center;
-      gap: 8px;
-	}
-	.question-input-box{
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: left;
-			width: 100%;
-      gap:8px;
+        color: #888888;
 
-	}
-	.question-input-box-btn{
-			display: flex;
-			align-items: baseline;
-			justify-content: center;
-			flex-direction: column;
-			gap: 9.5px;
-	}
-	.question-input{
+    }
 
-			width: 100%;
-      background: #F0F0F0;
-      border-radius: 4px;
+    .form-list-individual-date{
 
-			padding: 9px 8px;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      color: #888888;
-	}
-	.question-box-margin-top{
-			margin-top: 24px;
-	}
-	.small-text-question{
-			margin-right: 8px;
-	}
-	.question-branch-btn{
-      border: 1px solid #CCCCCC;
-      border-radius: 4px;
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			gap: 9px;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 22px;
-      color: #111111;
-			padding: 8px;
-	}
-	.question-branch-add{
-			padding-left: 34px;
-	}
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        display: flex;
+        align-items: center;
+        color: #888888;
+    }
+
+		.form-list-individual-state-unpublished,.form-list-individual-state-published{
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        /* Black */
+        border-radius: 4px;
+				padding: 8px 14px;
+		}
+		.form-list-individual-state-unpublished{
+        color: #111111;
+        background: #F0F0F0;
+		}
+    .form-list-individual-state-published{
+        color: #FFFFFF;
+        background: #111111;
+		}
+		.form-list-individual-state-delete{
+        cursor: pointer;
+		}
+
 
 
 </style>

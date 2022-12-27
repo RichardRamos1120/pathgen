@@ -1,6 +1,10 @@
-<script></script>
+<script>
 
+
+</script>
 
 <slot/>
 
-<style></style>
+<style>
+
+</style>
