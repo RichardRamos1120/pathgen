@@ -3,7 +3,6 @@
 
 </script>
 
-
 <main class='main'>
 	<div class='main-form'>
 		<div class='ques-res-box'>

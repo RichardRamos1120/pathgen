@@ -1,11 +1,14 @@
 <script>
+import {goto} from '$app/navigation';
+import {isLoggedIn} from '../../stores/authStore';
 </script>
 
 
+{#if $isLoggedIn === true}
 <main class='main'>
-	<div class='form-list'>
+	<div class='form-list' >
 
-		<div class='form-list-individual--create'>
+		<div class='form-list-individual--create' on:click={()=>goto("/admin/create-a-form")}>
 			<p class='form-list-individual-title'>+ Create a form</p>
 		</div>
 
@@ -101,21 +104,15 @@
 		</div>
 
 	</div>
+
 </main>
+{/if}
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-    *{
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        text-decoration: none;
-        user-select: none;
-    }
+
 		.form-list{
+        display: flex;
 				width: 100%;
-				display: flex;
 				justify-content:left;
 				align-items: center;
 				gap: 24px;
