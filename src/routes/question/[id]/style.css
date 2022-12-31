@@ -1,0 +1,33 @@
+.questionField{
+    outline: 1px dotted red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+
+}
+
+.question-form{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 500px;
+    border: 1px solid red;
+}
+.choice-field{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 2rem;
+}
+.choice-field__choice{
+    cursor: pointer;
+}
+
+.visible-flex{
+    display: flex !important;
+}
