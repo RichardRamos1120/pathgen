@@ -3,6 +3,7 @@
 	import { doc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import jsPDF from 'jspdf';
+	const htmlDoc = "";
 
 
 	export let data;
@@ -50,7 +51,7 @@
 	onMount(()=>{
 		//create a pdf  when click the generate pdf button
 		let genPdfBtn = document.querySelector("#genPdf .choice-field__choice");
-		let htmlDoc = "";
+
 
 		genPdfBtn.addEventListener("click",(e)=>{
 			const doc = new jsPDF({
@@ -79,8 +80,7 @@
 				async callback(doc){await doc.save(`PathGen`)}
 			})
 
-
-
+			htmlDoc = ``;
 		})
 
 	})
