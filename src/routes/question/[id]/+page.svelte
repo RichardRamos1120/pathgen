@@ -9,7 +9,7 @@
 	let questions = []
 
 	console.log(data.currentQuestion.question)
-
+	let isAccess = false;
 	function gotoNextQuestion(e,questionTitle,id){
 		let CurrentTitle = `${questionTitle}`;
 		let SelectedChoice = `Answer: ${e.srcElement.innerText}`;
@@ -24,10 +24,15 @@
 		//put the value to the storage as long as you are not pressing the generate pdf button
 		if(e.srcElement.innerText !== "Generate PDF" && e.srcElement.innerText !== "Next"){
 			questions.push([CurrentTitle,SelectedChoice])
+			isAccess = true;
 		}
 		//if press the next button copy instead the input from the user value
-		if(e.srcElement.innerText === "Next"){
+		//access this if the previous if statement is not yet triggered, meaning this if
+		//only targets the question form Next Button that is originally "short form"
+		//not not multi
+		if(e.srcElement.innerText === "Next" && !isAccess){
 			let currentUserInputVal = `Answer: ${e.srcElement.parentElement[0].value}`;
+			console.log(currentUserInputVal)
 			//remove any space and change to html entity space the &nbsp; for proper pdf format
 			currentUserInputVal = currentUserInputVal.replace(/\s+/g, '&nbsp;');
 
