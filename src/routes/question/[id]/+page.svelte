@@ -3,7 +3,7 @@
 	import { doc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import jsPDF from 'jspdf';
-	const htmlDoc = "";
+	let htmlDoc = "";
 
 
 	export let data;
