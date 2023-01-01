@@ -26,14 +26,47 @@
 	let qid = "";
 	let questionQuery = []
 	let currentUrl = ""
+	let pathUrl = "";
 
 	//publish the question to the database
 	onMount(()=>{
 
+			//close the element after milliseconds second after clicking the copy btn
+			const closeTheDiv = (el,milliseconds)=>{
+				setTimeout(()=>{
+					console.log(el)
+					el.classList.add("invisible");
+				},milliseconds)
+			}
+			//click for publish button
+			let publishBtn = document.querySelector("#afterPublish-btn")
+			publishBtn.addEventListener("click",(e)=>{
+				let urlVal = document.querySelector(".afterPublish-input").value;
+
+				//copy to clipboard the generated url, if succesful, display the copied message
+				(async () =>{
+					await navigator.clipboard.writeText(urlVal).then(()=>{
+						let msgEL = document.querySelector(".afterPublish-message");
+						msgEL.classList.remove("invisible");
+						closeTheDiv(msgEL,3000)
+						closeTheDiv(publishBtn.parentElement.parentElement,5000)
+					});
+				})()
+			})
+
 			const db = getFirestore(App);
 			const colRef = collection(db,"question");
 
+			//Push to DB
 			async function pushToDB(){
+
+				//if there is any gen pdf do this
+				questionQuery.push({
+					title:"Thank you for your time",
+					qid:"genPdf",
+					answer:{"Generate PDF":"genPdf"},
+					choice:["Generate PDF"]
+				})
 
 				let result = await setDoc(doc(colRef,currentUrl),{
 					created_at:Timestamp.now(),
@@ -42,6 +75,14 @@
 					updated_at:Timestamp.now(),
 					question:questionQuery
 				})
+
+				//after publish clear the questions box
+				let questionBox = document.querySelectorAll(".question-box");
+				questionBox.forEach(el=>el.remove())
+
+				//make the copy div visible
+				let copyDiv = document.querySelector(".afterPublish-form");
+				copyDiv.classList.remove("invisible");
 			}
 
 
@@ -49,6 +90,8 @@
 		document.querySelector(".publish-btn").addEventListener(("click"),(e)=>{
 			currentUrl = makeid(20).toLocaleLowerCase();
 			let allQuestion = document.querySelectorAll(".question-box");
+
+
 			allQuestion.forEach(divEl=>{
 				let choiceArr = [];
 				let answerObj = {};
@@ -87,12 +130,12 @@
 				})
 
 			})
-			console.log(questionQuery,"Successfully Publish")
-			let pathUrl = window.location.href
+			// console.log(questionQuery,"Successfully Publish")
+			pathUrl = window.location.href
 			pathUrl = pathUrl.replace("/admin/create-a-form",`/question/${currentUrl}`)
-			console.log(pathUrl)
 			pushToDB();
 		})
+
 	})
 
 	const generateQuestion = (e,choice) =>{
@@ -135,8 +178,11 @@
 							<button class='branch-cancel' onclick='closeBranch(this)'>Cancel</button>
 							</div>
 							</div>
-				</div>
+							</div>
 					<input type='text' placeholder='Click to add placeholder text' class='question-input' id='input-data-answer-${qid}' class='input-data-answer' value=''>
+				</div>
+				<div class='option_choice'>
+				<button class='question-branch-btn question-branch-option question-branch-option-next'>Next</button>
 				</div>
 			 `
 			mainForm.insertBefore(questionBox,mainForm.lastChild)
@@ -180,6 +226,7 @@
 						</div>
 						<div class='option_choice'>
 							<button class='question-branch-btn question-branch-add' onclick="addChoice(this)">Add Option</button>
+
 						</div>
 					</div>
 			`
@@ -214,6 +261,19 @@
 			</div>
 		</div>
 	</div>
+
+	<div class='afterPublish'>
+		<div class='afterPublish-form invisible'>
+			<h4 class='afterPublish-title'>Published successfully.</h4>
+			<small class='afterPublish-small'>Direct URL</small>
+			<div class='afterPublish-input-container'>
+				<input type='text' class='afterPublish-input' bind:value={pathUrl}>
+				<button class='afterPublish-btn' id='afterPublish-btn'>Copy</button>
+			</div>
+		</div>
+		<span class='afterPublish-message invisible'>Copied to clipboard.</span>
+	</div>
+
 </main>
 
 <footer>
@@ -221,6 +281,97 @@
 </footer>
 
 <style>
+		:global(.invisible){
+				display: none !important;
+
+		}
+		:global(.afterPublish-small){
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+				margin-bottom: -8px;
+        /* identical to box height */
+
+
+        color: #000000;
+
+    }
+		:global(.afterPublish){
+        position: absolute;
+				right: 20px;
+				top: 100px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: baseline;
+
+				gap: 16px;
+
+		}
+		:global(.afterPublish-form){
+        background: #FFFFFF;
+				width: 265px;
+				display: flex;
+				gap: 16px;
+				flex-direction: column;
+				justify-content: center;
+				align-items: baseline;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+				padding: 16px;
+
+		}
+    :global(.afterPublish-input-container){
+				display: block;
+    }
+    :global(.afterPublish-input){
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+				padding-left: 8px;
+				display: inline-block;
+				margin-right: 8px;
+        /* identical to box height */
+				background-color: #F0F0F0;
+				border-radius: 4px;
+				height: 24px;
+        color: #111111;
+
+    }
+    :global(.afterPublish-btn){
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+        display: inline-block;
+
+        color: #111111;
+    }
+
+    :global(.afterPublish-message){
+        transition: all .5s linear;
+        background: #FFFFFF;
+        /* Card Shadow */
+        width: 265px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+        /* identical to box height */
+				height: 54px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+        color: #000000;
+
+        box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+		}
+		:global(.question-branch-option-next){
+				display: block;
+				transform: translateX(22px);
+		}
 		:global(.branch-backdrop){
 				width: 100vw;
 				height: 100vh;

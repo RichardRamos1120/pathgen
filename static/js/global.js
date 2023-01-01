@@ -2,6 +2,10 @@
 
 let questionItem = [];
 
+const letThisComponentDissapear = () =>{
+
+}
+
 const addChoice = (btnEl) =>{
 	let choiceContainer = btnEl.parentElement;
 
@@ -46,6 +50,7 @@ let branchSelect = 	branchChoiceBox.querySelectorAll(".branch-select");
 			currentOption += `<option value='${questionItem[j]}'>${questionItem[j]}</option>`
 		}
 		innerSelect.innerHTML = currentOption;
+		innerSelect.innerHTML += `<option value='genPdf'>Generate PDF</option>`
 		currentOption = ``;
 	})
 

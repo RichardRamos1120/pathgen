@@ -27,6 +27,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"firebase": "^9.15.0"
+		"firebase": "^9.15.0",
+		"jspdf": "^2.5.1"
 	}
 }
