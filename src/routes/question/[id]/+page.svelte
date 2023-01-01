@@ -9,7 +9,7 @@
 	export let data;
 	let questions = []
 
-	console.log(data.currentQuestion.question)
+	console.log(`current questions:`,data.currentQuestion.question)
 	let isAccess = false;
 	function gotoNextQuestion(e,questionTitle,id){
 		let CurrentTitle = `${questionTitle}`;
@@ -33,11 +33,17 @@
 		//not not multi
 		if(e.srcElement.innerText === "Next" && !isAccess){
 			let currentUserInputVal = `Answer: ${e.srcElement.parentElement[0].value}`;
-			console.log(currentUserInputVal)
+			console.log(`current user input: `,currentUserInputVal)
 			//remove any space and change to html entity space the &nbsp; for proper pdf format
 			currentUserInputVal = currentUserInputVal.replace(/\s+/g, '&nbsp;');
 
 			questions.push([CurrentTitle,currentUserInputVal])
+		}
+
+		//if access one time make it false again to be accessible for the next
+		//short form
+		if(isAccess){
+			isAccess = false
 		}
 
 		document.querySelectorAll(".question-form").forEach(divEl=>{
