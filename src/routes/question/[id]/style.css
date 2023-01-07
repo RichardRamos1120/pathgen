@@ -5,15 +5,29 @@
     justify-content: center;
     flex-direction: column;
     height: 100vh;
+    position: relative;
 
 }
 
+img{
+    display: block;
+    width: 100%;
+}
+iframe{
+    display: block;
+    height: 400px;
+    width: 100%;
+    resize: both;
+}
+
 .question-form{
+    min-width: 600px;
     display: none;
+    position: relative;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 500px;
+    /*max-height: 500px;*/
     box-shadow: 0 2px 5px rgba(0,0,0,.2);
     padding: 20px;
     gap: 20px;
@@ -81,4 +95,12 @@
 .visible-flex{
     display: flex !important;
 
+}
+
+.question-info-box{
+    max-width: 500px !important;
+    display: flex;
+    flex-direction: column;
+    max-height: 900px !important;
+    overflow: auto;
 }

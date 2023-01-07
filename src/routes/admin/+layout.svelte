@@ -26,6 +26,7 @@
 </script>
 
 
+<div class='modal-backdrop'>&nbsp;</div>
 <Header/>
 <slot></slot>
 
@@ -33,6 +34,18 @@
 
 
 
+
 <style>
+	.modal-backdrop{
+			display: none;
+			z-index: 999999;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(35, 32, 32, 0.24);
+
+	}
 </style>
 

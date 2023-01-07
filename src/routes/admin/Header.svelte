@@ -22,7 +22,7 @@
 <header>
 	<div>
 		<img src='/img/arrow-left.svg' alt='arrow-left' class='arrow-left'>
-		<h2 class='title'>Cool Club Application</h2>
+		<h2 class='title' on:click={()=>goto("/admin")}>Question List</h2>
 		<small class='unpublished'>Unpublished</small>
 	</div>
 	<div>
@@ -40,10 +40,17 @@
 {/if}
 
 <style>
-
-
+		
+		.title{
+        cursor: pointer;
+		}
 
 		header{
+				z-index: 99999;
+				top: 0;
+				position: fixed;
+				background-color:#fff;
+				width: 100vw;
 				padding: 16px;
         box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
 
@@ -102,6 +109,8 @@
     }
 		.arrow-left{
 				cursor: pointer;
+				width: 24px;
+				height: 24px;
 		}
 
 

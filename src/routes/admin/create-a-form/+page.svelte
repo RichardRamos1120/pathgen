@@ -1,7 +1,21 @@
 <script>
-	import {onMount} from 'svelte';
+	import {onMount, onDestroy} from 'svelte';
 	import App from "$lib/auth";
 	import { collection, doc, setDoc, getFirestore, Timestamp} from "firebase/firestore";
+
+
+	let editor = {}
+	let editorCount = 0;
+
+
+	export let toolbarOptions = [
+		[{ header: 1 }, { header: 2 }, "blockquote", "link", "image", "video"],
+		["bold", "italic", "underline", "strike"],
+		[{ list: "ordered" }, { list: "ordered" }],
+		[{ align: [] }],
+		["clean"]
+	];
+
 
 
 	//random id generator
@@ -20,6 +34,7 @@
 	let q =  "q";
 	let questCount;
 
+	let questionTitle = "";
 	let collectionTitle = "";
 	let created_at;
 	let updated_at;
@@ -27,9 +42,73 @@
 	let questionQuery = []
 	let currentUrl = ""
 	let pathUrl = "";
+	let pushAlready = false;
+	let publishBtn;
+	let firstQuestion = true;
 
 	//publish the question to the database
-	onMount(()=>{
+
+	const db = getFirestore(App);
+	const colRef = collection(db,"question");
+
+	async function pushToDB(){
+
+		//to make sure we are only pushing 1 date per publish to the db
+		if(!pushAlready){
+
+
+			//if inside pushDB
+
+			//if there is any gen pdf do this
+			questionQuery.push({
+				title:"Thank you for your time",
+				qid:"genPdf",
+				answer:{"Generate PDF":"genPdf"},
+				choice:["Generate PDF"],
+
+			})
+
+			let result = await setDoc(doc(colRef,currentUrl),{
+				created_at:Date.now(),
+				collection_title:questionTitle?questionTitle:"Default Title",
+				isPublish:true,
+				updated_at:Date.now(),
+				question:questionQuery
+			}).then(()=>{
+				console.log(`push succesfully`)
+				pushAlready = true;
+				firstQuestion = true;
+			})
+			pushAlready = false;
+			//after publish clear the questions box
+			let questionBox = document.querySelectorAll(".question-box");
+			questionBox.forEach(el=>el.remove())
+
+			//after publish clear the questionQuery array to reset everything so that we can create new question again without page refresh
+			//clear everything
+			num = 0;
+			q =  "q";
+			questCount = 0;
+			questionTitle = "";
+			collectionTitle = "";
+			created_at = 0;
+			updated_at = 0;
+			qid = "";
+			questionQuery = []
+			questionItem = [];
+
+			//make the copy div visible
+			let copyDiv = document.querySelector(".afterPublish-form");
+			copyDiv.classList.remove("invisible");
+
+
+			//if inside pushDB
+		}
+
+
+	}
+
+	onMount(async ()=>{
 
 			//close the element after milliseconds second after clicking the copy btn
 			const closeTheDiv = (el,milliseconds)=>{
@@ -39,7 +118,7 @@
 				},milliseconds)
 			}
 			//click for publish button
-			let publishBtn = document.querySelector("#afterPublish-btn")
+			publishBtn = document.querySelector("#afterPublish-btn")
 			publishBtn.addEventListener("click",(e)=>{
 				let urlVal = document.querySelector(".afterPublish-input").value;
 
@@ -48,47 +127,76 @@
 					await navigator.clipboard.writeText(urlVal).then(()=>{
 						let msgEL = document.querySelector(".afterPublish-message");
 						msgEL.classList.remove("invisible");
-						closeTheDiv(msgEL,3000)
-						closeTheDiv(publishBtn.parentElement.parentElement,5000)
+						closeTheDiv(msgEL,500)
+						closeTheDiv(publishBtn.parentElement.parentElement,1000)
+
 					});
 				})()
 			})
 
-			const db = getFirestore(App);
-			const colRef = collection(db,"question");
+		// const db = getFirestore(App);
+		// const colRef = collection(db,"question");
 
 			//Push to DB
 			async function pushToDB(){
 
-				//if there is any gen pdf do this
-				questionQuery.push({
-					title:"Thank you for your time",
-					qid:"genPdf",
-					answer:{"Generate PDF":"genPdf"},
-					choice:["Generate PDF"]
-				})
+				//to make sure we are only pushing 1 date per publish to the db
+				if(!pushAlready){
 
-				let result = await setDoc(doc(colRef,currentUrl),{
-					created_at:Timestamp.now(),
-					collection_title:"temTitle",
-					isPublish:true,
-					updated_at:Timestamp.now(),
-					question:questionQuery
-				})
 
-				//after publish clear the questions box
-				let questionBox = document.querySelectorAll(".question-box");
-				questionBox.forEach(el=>el.remove())
+					//if inside pushDB
 
-				//make the copy div visible
-				let copyDiv = document.querySelector(".afterPublish-form");
-				copyDiv.classList.remove("invisible");
+					//if there is any gen pdf do this
+					questionQuery.push({
+						title:"Thank you for your time",
+						qid:"genPdf",
+						answer:{"Generate PDF":"genPdf"},
+						choice:["Generate PDF"],
+
+					})
+
+					let result = await setDoc(doc(colRef,currentUrl),{
+						created_at:Date.now(),
+						collection_title:questionTitle?questionTitle:"Default Title",
+						isPublish:true,
+						updated_at:Date.now(),
+						question:questionQuery
+					}).then(()=>{
+						console.log(`push succesfully`)
+						pushAlready = true;
+						firstQuestion = true;
+					})
+					pushAlready = false;
+					//after publish clear the questions box
+					let questionBox = document.querySelectorAll(".question-box");
+					questionBox.forEach(el=>el.remove())
+
+					//after publish clear the questionQuery array to reset everything so that we can create new question again without page refresh
+					//clear everything
+					num = 0;
+					q =  "q";
+					questCount = 0;
+					questionTitle = "";
+					collectionTitle = "";
+					created_at = 0;
+					updated_at = 0;
+					qid = "";
+					questionQuery = []
+					questionItem = [];
+
+					//make the copy div visible
+					let copyDiv = document.querySelector(".afterPublish-form");
+					copyDiv.classList.remove("invisible");
+
+
+					//if inside pushDB
+				}
+
+
 			}
 
-
-
 		document.querySelector(".publish-btn").addEventListener(("click"),(e)=>{
-			currentUrl = makeid(20).toLocaleLowerCase();
+			currentUrl = makeid(20);
 			let allQuestion = document.querySelectorAll(".question-box");
 
 
@@ -98,11 +206,30 @@
 				let answerInputPlaceValue = "";
 				let answerInput = divEl.querySelector('.question-input')
 				let answerInputActive = false;
+				let textareaInput = divEl.querySelector(".question-textarea");
+				let answerTextareaActive = false;
+				let editorWrapper = divEl.querySelector('.editor-wrapper');
+				let htmlCode = ``;
 
+				//for short question
 				if(answerInput){
 					answerInputActive = true;
 					answerInputPlaceValue = answerInput.value;
 				}
+				//for long question
+				if(textareaInput){
+					answerTextareaActive = true;
+					answerInputPlaceValue = textareaInput.value;
+				}
+
+				//for editor wrapper i.e the info question
+				if(editorWrapper){
+					htmlCode = "<div class='question-info-box'>"
+					htmlCode += editorWrapper.querySelector(".ql-editor").innerHTML;
+					htmlCode += "</div>";
+
+				}
+
 
 
 				let choices = divEl.querySelectorAll(".question-branch-option--value");
@@ -126,8 +253,12 @@
 					choice:choiceArr,
 					answer:answerObj,
 					answerInputPlaceValue,
-					answerInputActive
+					answerInputActive,
+					html:htmlCode,
+					answerTextareaActive,
+					firstQ:firstQuestion
 				})
+				firstQuestion = false;
 
 			})
 			// console.log(questionQuery,"Successfully Publish")
@@ -137,8 +268,22 @@
 		})
 
 	})
+	onDestroy(()=>{
+		publishBtn;
+		questionItem = [];
+		getFirestore(App);
+		collection(db,"question");
+		generateQuestion
+		pushToDB
+		console.log("destroyed")
 
-	const generateQuestion = (e,choice) =>{
+	})
+
+
+
+	const generateQuestion = async (e,choice) =>{
+		document.querySelector(".modal-backdrop").style.height = `${document.documentElement.scrollHeight +1000}px`;
+
 		let mainForm = document.querySelector(".main-form");
 		num++;
 		qid = q+num;
@@ -150,7 +295,8 @@
 			questionBox.classList.add("question-box","question-box-margin-top");
 			questionBox.dataset.qid = qid;
 			questionBox.innerHTML = `
-				<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>${num}</span> <input class='question-box-title--primary__text' value="" type='text' placeholder="Question title"/></h2>
+				<button class='closeBtn' onclick='closeQuestionBox(this)'>X</button>
+				<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>q${num}</span> <input class='question-box-title--primary__text' value="" type='text' placeholder="Question title"/></h2>
 				<div class='question-input-box'>
 					<div class='question-input-box-btn'>
 					<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
@@ -161,15 +307,13 @@
 								<div class='branch-form'>
 								<h4 class='branch-choice'>No, go to:</h4>
 								<select class='branch-select' id=''>
-								<option value='Q1'>Q1</option>
-								<option value='Q2'>Q2</option>
+
 								</select>
 								</div>
 								<div class='branch-form'>
 								<h4 class='branch-choice'>Yes, go to:</h4>
 								<select class='branch-select' id=''>
-								<option value='Q1'>Q1</option>
-								<option value='Q2'>Q2</option>
+
 								</select>
 								</div>
 							</div>
@@ -194,7 +338,8 @@
 			questionBox.classList.add("question-box","question-box-margin-top");
 			questionBox.dataset.qid = qid;
 			questionBox.innerHTML = `
-						<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>${num}</span> <input class='question-box-title--primary__text' value='' type='text' placeholder="Question title"/></h2>
+						<button class='closeBtn' onclick='closeQuestionBox(this)'>X</button>
+						<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>q${num}</span> <input class='question-box-title--primary__text' value='' type='text' placeholder="Question title"/></h2>
 						<div class='question-input-box'>
 						<div class='question-input-box-btn'>
 							<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
@@ -206,15 +351,62 @@
 									<div class='branch-form'>
 										<h4 class='branch-choice'>No, go to:</h4>
 										<select class='branch-select' id=''>
-										<option value='Q1'>Q1</option>
-										<option value='Q2'>Q2</option>
+
+										</select>
+									</div>
+
+							</div>
+							<div class='branch-button-bottom'>
+							<button class='branch-good' onclick='closeBranch(this)'>Looks Good!</button>
+							<button class='branch-cancel' onclick='closeBranch(this)'>Cancel</button>
+							</div>
+							</div>
+						</div>
+						<div class='option_choice'>
+							<button class='question-branch-btn question-branch-add' onclick="addChoice(this)">Add Option</button>
+						</div>
+					</div>
+			`
+			mainForm.insertBefore(questionBox,mainForm.lastChild)
+		}
+		else if(choice === "info"){
+			await (async function() {
+				const { default: Quill } = await import("quill");
+				let infoCount = `info${editorCount}`;
+
+				editor[infoCount] = infoCount;
+				console.log(editor[infoCount])
+
+				editorCount++;
+				// reference for info count
+				questionItem.push(qid);
+				let questionBox = document.createElement("div");
+				questionBox.classList.add("question-box", "question-box-margin-top", "question-info-box");
+				questionBox.dataset.qid = qid;
+
+				questionBox.innerHTML = `
+						<button class='closeBtn' onclick='closeQuestionBox(this)'>X</button>
+						<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>q${num}</span> <input class='question-box-title--primary__text' value='' type='text' placeholder="Question title"/></h2>
+						<div class="editor-wrapper"><div id='${editor[infoCount]}' /></div></div>
+						<br>
+						<div class='question-input-box'>
+						<div class='question-input-box-btn'>
+							<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
+							<button class='question-input-box-btn-menu' onclick='openBranchModal(this)'><img src='/img/menu.svg' alt=''></button>
+							<div class='branch-modal'>
+								<h4 class='branch-title'>Branch</h4>
+
+								<div class='branch-choice-box' id='branch-choice-box-${qid}'>
+									<div class='branch-form'>
+										<h4 class='branch-choice'>No, go to:</h4>
+										<select class='branch-select' id=''>
+
 										</select>
 									</div>
 									<div class='branch-form'>
 										<h4 class='branch-choice'>Yes, go to:</h4>
 										<select class='branch-select' id=''>
-										<option value='Q1'>Q1</option>
-										<option value='Q2'>Q2</option>
+
 										</select>
 									</div>
 							</div>
@@ -226,12 +418,70 @@
 						</div>
 						<div class='option_choice'>
 							<button class='question-branch-btn question-branch-add' onclick="addChoice(this)">Add Option</button>
-
 						</div>
 					</div>
 			`
-			mainForm.insertBefore(questionBox,mainForm.lastChild)
+
+
+				mainForm.insertBefore(questionBox, mainForm.lastChild)
+
+				let quill = new Quill(`#${editor[infoCount]}`, {
+					modules: {
+						toolbar: toolbarOptions
+					},
+					theme: "snow",
+					placeholder: "Write your story..."
+				});
+
+
+
+			})();
+
 		}
+		if(choice === "long"){
+			questionItem.push(qid);
+			let questionBox = document.createElement("div");
+			questionBox.classList.add("question-box","question-box-margin-top");
+			questionBox.dataset.qid = qid;
+			questionBox.innerHTML = `
+				<button class='closeBtn' onclick='closeQuestionBox(this)'>X</button>
+				<h2 class='question-box-title'><span class='question-box-title--primary'><span class='small-text-question'>q${num}</span> <input class='question-box-title--primary__text' value="" type='text' placeholder="Question title"/></h2>
+				<div class='question-input-box'>
+					<div class='question-input-box-btn'>
+					<button class='question-input-box-btn-t'><img src='/img/t-btn.svg' alt=''></button>
+							<button class='question-input-box-btn-menu' onclick='openBranchModal(this)'><img src='/img/menu.svg' alt=''></button>
+							<div class='branch-modal'>
+								<h4 class='branch-title'>Branch</h4>
+								<div class='branch-choice-box'>
+								<div class='branch-form'>
+								<h4 class='branch-choice'>No, go to:</h4>
+								<select class='branch-select' id=''>
+
+								</select>
+								</div>
+								<div class='branch-form'>
+								<h4 class='branch-choice'>Yes, go to:</h4>
+								<select class='branch-select' id=''>
+
+								</select>
+								</div>
+							</div>
+							<div class='branch-button-bottom'>
+							<button class='branch-good' onclick='closeBranch(this)'>Looks Good!</button>
+							<button class='branch-cancel' onclick='closeBranch(this)'>Cancel</button>
+							</div>
+							</div>
+							</div>
+					<textarea placeholder='Click to add placeholder text' class='question-textarea question-input' id='input-data-answer-${qid}' class='input-data-answer' value=''></textarea>
+				</div>
+				<div class='option_choice'>
+				<button class='question-branch-btn question-branch-option question-branch-option-next'>Next</button>
+				</div>
+			 `;
+			mainForm.insertBefore(questionBox,mainForm.lastChild)
+
+		}
+
 
 		window.scrollTo(0, document.body.scrollHeight);
 
@@ -241,25 +491,24 @@
 
 
 
+
+
 </script>
 <main class='main'>
+
 	<div class='main-form'>
 		<!--Question Response box-->
 		<div class='ques-res-box'>
 			<button class='question-selected question-btn'>Questions</button>
 			<button class='response-btn'>Responses</button>
-		</div>
-		<!--End Question Response box-->
-
-		<div class='add-new-question-box'>
-			<h2 class='add-new-question-box-title'>Add New Question</h2>
-			<div class='add-new-question-box-btns'>
-				<button class='add-new-question-btn short-btn' on:click|preventDefault={(e)=>generateQuestion(e,"short")}><img src='/img/short-btn.svg' alt=''>Short</button>
-				<button class='add-new-question-btn long-btn' on:click|preventDefault={(e)=>generateQuestion(e,"long")}><img src='/img/long-btn.svg' alt=''>Long</button>
-				<button class='add-new-question-btn info-btn' on:click|preventDefault={(e)=>generateQuestion(e,"info")}><img src='/img/info-btn.svg' alt=''>Info</button>
-				<button class='add-new-question-btn multi-btn' on:click|preventDefault={(e)=>generateQuestion(e,"multi")}><img src='/img/multi-btn.svg' alt=''>Multi</button>
+			<div>
+				<input type='text' placeholder='Question title here' id='question-title-here' bind:value={questionTitle}>
 			</div>
 		</div>
+
+		<!--End Question Response box-->
+
+		<div></div>
 	</div>
 
 	<div class='afterPublish'>
@@ -277,13 +526,46 @@
 </main>
 
 <footer>
-	&nbsp;
+	<div class='add-new-question-box'>
+	<h2 class='add-new-question-box-title'>Add New Question</h2>
+	<div class='add-new-question-box-btns'>
+		<button class='add-new-question-btn short-btn' on:click|preventDefault={(e)=>generateQuestion(e,"short")}><img src='/img/short-btn.svg' alt=''>Short</button>
+		<button class='add-new-question-btn long-btn' on:click|preventDefault={(e)=>generateQuestion(e,"long")}><img src='/img/long-btn.svg' alt=''>Long</button>
+		<button class='add-new-question-btn info-btn' on:click|preventDefault={(e)=>generateQuestion(e,"info")}><img src='/img/info-btn.svg' alt=''>Info</button>
+		<button class='add-new-question-btn multi-btn' on:click|preventDefault={(e)=>generateQuestion(e,"multi")}><img src='/img/multi-btn.svg' alt=''>Multi</button>
+	</div>
+</div>
 </footer>
 
 <style>
-		:global(.invisible){
+    @import 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
+
+    :global(.invisible){
 				display: none !important;
 
+		}
+		footer{
+				background-color: #fff;
+				width: 100vw;
+				height: 200px;
+				position: relative;
+				bottom:0;
+
+		}
+		#question-title-here{
+				margin-top: 20px;
+        width: 100%;
+        background: rgba(240, 240, 240, 0.41);
+        border-radius: 4px;
+        padding: 9px 8px;
+        font-style: normal;
+        color: #888888;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 29px;
+		}
+		.add-new-question-box{
+				margin-top: 0;
 		}
 		:global(.afterPublish-small){
         font-style: normal;
@@ -423,6 +705,7 @@
         color: #FFFFFF;
 		}
 		:global(.branch-modal){
+				z-index: 999999;
 				display: none;
 				flex-direction: column;
         width: 114px;
@@ -438,6 +721,7 @@
 		:global(.branch-modal >*){
 				padding-left: 8px;
 				padding-right: 8px;
+
 		}
 		:global(.branch-choice-box){
 				padding-left: 0;
@@ -549,13 +833,13 @@
     }
     :global(.main-form){
 
-        margin-top: 56px;
+        margin-top: 156px;
         width:444px;
         position: relative;
     }
     :global(.ques-res-box){
         margin-left: 8px;
-        margin-bottom: 40px;
+				margin-bottom: 30px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         align-items: center;
@@ -597,21 +881,24 @@
     :global(.question-box-title--secondary){
         color: #CF5D5D;
     }
-    :global(.question-box-title--primary),:global(.question-box-title--primary__text){
+    :global(.question-box-title--primary),:global(.question-box-title--primary__text),:global(.question-box-title--primary__textarea){
         color: #111111;
     }
-    :global(.question-box-title--primary),:global(.question-box-title--secondary),:global(.question-box-title--primary__text){
+    :global(.question-box-title--primary),:global(.question-box-title--secondary),:global(.question-box-title--primary__text),:global(.question-box-title--primary__question-box-title--primary__textarea){
         font-style: normal;
         font-weight: 700;
         font-size: 24px;
         line-height: 29px;
     }
     :global(.question-box){
+        box-shadow: 0 2px 10px rgba(0,0,0,.2);
+				padding: 16px;
         display: flex;
         flex-direction: column;
         align-items: baseline;
         justify-content: center;
         gap: 8px;
+
     }
     :global(.question-input-box){
         display: flex;
@@ -648,6 +935,7 @@
     }
     :global(.small-text-question){
         margin-right: 8px;
+				font-weight: 700;
     }
     :global(.question-branch-btn){
         border: 1px solid #CCCCCC;
@@ -667,6 +955,25 @@
     :global(.question-branch-add){
         padding:11px;
     }
+
+		:global(.question-box-title--primary__textarea){
+				display: block;
+				width: 424px !important;
+				margin-left: 20px;
+				padding: 8px;
+				height: 150px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 29px;
+				background-color: #F0F0F0;
+		}
+		:global(.closeBtn){
+				font-weight: 700;
+				color: #888888;
+				font-size: 20px;
+				cursor: pointer;
+		}
 
 
 </style>

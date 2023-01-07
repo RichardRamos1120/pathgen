@@ -1,6 +1,60 @@
 <script>
 import {goto} from '$app/navigation';
+import { redirect } from '@sveltejs/kit';
+
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo('en-US')
+
+import { doc } from 'firebase/firestore';
 import {isLoggedIn} from '../../stores/authStore';
+import { afterUpdate, onMount } from 'svelte';
+
+export let data;
+let { currentQuestions } =  data;
+
+console.log(currentQuestions)
+function redirecTo(){
+	window.location.replace("/admin/create-a-form");
+
+}
+
+
+
+afterUpdate(()=>{
+	let formList = document.querySelector(".form-list");
+
+
+	if(formList){
+		for(const question in  currentQuestions){
+			let currentHtml = "";
+			let div = document.createElement("div");
+			let currDate = currentQuestions[question]["updated_at"];
+			currentHtml = `
+			<div class='form-list-individual'>
+				<div class='form-list-individual-status'>
+					<a class='form-list-individual-title' href='/question/${question}' target="_blank">${currentQuestions[question].collection_title}</a>
+					<small class='form-list-individual-date'>${timeAgo.format(new Date(currDate))}</small>
+				</div>
+				<div class='form-list-individual-state'>
+					<span class='form-list-individual-state-${currentQuestions[question].isPublish?"published":"unpublished"}'>${currentQuestions[question].isPublish?"Published":"UNPUBLISHED"}</span>
+					<span class='form-list-individual-state-delete'>
+						<img src='/img/unpublish.svg' alt=''>
+					</span>
+				</div>
+			</div>
+		`
+			div.innerHTML = currentHtml;
+			formList.appendChild(div)
+		}
+
+
+	}
+
+
+})
+
 </script>
 
 
@@ -8,100 +62,10 @@ import {isLoggedIn} from '../../stores/authStore';
 <main class='main'>
 	<div class='form-list' >
 
-		<div class='form-list-individual--create' on:click={()=>goto("/admin/create-a-form")}>
+		<div class='form-list-individual--create' on:click={redirecTo}>
 			<p class='form-list-individual-title'>+ Create a form</p>
 		</div>
 
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>CoolClub Application</p>
-				<small class='form-list-individual-date'>Updated 2 days ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/unpublish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>Hackathon UX Research</p>
-				<small class='form-list-individual-date'>Updated a week ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-published'>PUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/publish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>CoolClub Application</p>
-				<small class='form-list-individual-date'>Updated 2 days ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/unpublish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>Hackathon UX Research</p>
-				<small class='form-list-individual-date'>Updated a week ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-published'>PUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/publish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>CoolClub Application</p>
-				<small class='form-list-individual-date'>Updated 2 days ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-unpublished'>UNPUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/unpublish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>Hackathon UX Research</p>
-				<small class='form-list-individual-date'>Updated a week ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-published'>PUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/publish.svg' alt=''>
-				</span>
-			</div>
-		</div>
-
-		<div class='form-list-individual'>
-			<div class='form-list-individual-status'>
-				<p class='form-list-individual-title'>Hackathon UX Research</p>
-				<small class='form-list-individual-date'>Updated a week ago</small>
-			</div>
-			<div class='form-list-individual-state'>
-				<span class='form-list-individual-state-published'>PUBLISHED</span>
-				<span class='form-list-individual-state-delete'>
-					<img src='/img/publish.svg' alt=''>
-				</span>
-			</div>
-		</div>
 
 	</div>
 
@@ -110,7 +74,7 @@ import {isLoggedIn} from '../../stores/authStore';
 
 <style>
 
-		.form-list{
+		:global(.form-list){
         display: flex;
 				width: 100%;
 				justify-content:left;
@@ -118,9 +82,10 @@ import {isLoggedIn} from '../../stores/authStore';
 				gap: 24px;
 				padding: 56px;
 				flex-wrap: wrap;
+				margin-top: 100px;
 
 		}
-		.form-list-individual,.form-list-individual--create{
+    :global(.form-list-individual),	:global(.form-list-individual--create){
 				display: flex;
 				flex-direction: column;
         border-radius: 4px;
@@ -129,7 +94,7 @@ import {isLoggedIn} from '../../stores/authStore';
 
 
     }
-		.form-list-individual{
+    :global(.form-list-individual){
         background: #FFFFFF;
         box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
         justify-content: space-between;
@@ -137,22 +102,22 @@ import {isLoggedIn} from '../../stores/authStore';
 				padding: 16px;
 
     }
-		.form-list-individual--create{
+    :global(.form-list-individual--create){
 				cursor: pointer;
         justify-content: center;
         align-items: center;
         border: 1px solid #CCCCCC;
 		}
-		.form-list-individual-state{
+    :global(.form-list-individual-state){
 				display: flex;
 				width: 100%;
 				justify-content: space-between;
 				align-items: center;
 		}
-		.form-list-individual-status{
+    :global(.form-list-individual-status){
 				width: 100%;
 		}
-		.form-list-individual-status .form-list-individual-title{
+    :global(.form-list-individual-status .form-list-individual-title){
         font-style: normal;
         font-weight: 700;
         font-size: 18px;
@@ -162,7 +127,7 @@ import {isLoggedIn} from '../../stores/authStore';
 
         color: #111111;
 		}
-		.form-list-individual-title{
+    :global(.form-list-individual-title){
         cursor: pointer;
         font-style: normal;
         font-weight: 400;
@@ -179,7 +144,7 @@ import {isLoggedIn} from '../../stores/authStore';
 
     }
 
-    .form-list-individual-date{
+    :global(.form-list-individual-date){
 
         font-style: normal;
         font-weight: 400;
@@ -190,7 +155,7 @@ import {isLoggedIn} from '../../stores/authStore';
         color: #888888;
     }
 
-		.form-list-individual-state-unpublished,.form-list-individual-state-published{
+    :global(.form-list-individual-state-unpublished),	:global(.form-list-individual-state-published){
         font-style: normal;
         font-weight: 400;
         font-size: 12px;
@@ -203,15 +168,15 @@ import {isLoggedIn} from '../../stores/authStore';
         border-radius: 4px;
 				padding: 8px 14px;
 		}
-		.form-list-individual-state-unpublished{
+    :global(.form-list-individual-state-unpublished){
         color: #111111;
         background: #F0F0F0;
 		}
-    .form-list-individual-state-published{
+    :global(.form-list-individual-state-published){
         color: #FFFFFF;
         background: #111111;
 		}
-		.form-list-individual-state-delete{
+    :global(.form-list-individual-state-delete){
         cursor: pointer;
 		}
 

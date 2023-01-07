@@ -3,6 +3,8 @@
 	import { doc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import jsPDF from 'jspdf';
+	import {makeItVisibleFirst} from '../../../stores/authStore';
+
 	export let data;
 
 
@@ -12,6 +14,7 @@
 
 	let isAccess = false;
 	let pushItOneTimeBeforeChecking = true;
+
 
 	//if the user loop the question back
 	function checkIfUserAnsweredAlready(questionTitle,answer){
@@ -205,16 +208,33 @@
 		})
 
 	})
+	console.log(data.currentQuestion.question[0])
+
+
 </script>
 
-<section class='questionField'>
-	{#each data.currentQuestion.question as question}
 
-		<form class='question-form {question.qid === "q1" ?"visible-flex" :""}' id='{question.qid}'>
+
+<section class='questionField'>
+	{#each data.currentQuestion.question as question }
+
+		<form class='question-form {question.firstQ ?"visible-flex" :""}' id='{question.qid}'>
 			<h2 class='question-title'>{question.title}</h2>
-			{#if question.answerInputActive}
-				<input class='question-user-input' type='text' value='' placeholder='{question.answerInputPlaceValue}'>
+
+			{#if question.html}
+
+					{@html question.html}
+
+			{/if}
+
+			{#if question.answerTextareaActive && question.answerInputActive}
+				<textarea class='question-user-input'  placeholder='{question.answerInputPlaceValue}'></textarea>
 				<a class='choice-field__choice choice-field__next' on:click|preventDefault={ (e)=>{
+					gotoNextQuestion(e,question.title,question.answer.Next)
+				}}>Next</a>
+				{:else if question.answerInputActive}
+					<input class='question-user-input' type='text' value='' placeholder='{question.answerInputPlaceValue}'>
+					<a class='choice-field__choice choice-field__next' on:click|preventDefault={ (e)=>{
 					gotoNextQuestion(e,question.title,question.answer.Next)
 				}}>Next</a>
 			{/if}
@@ -239,3 +259,4 @@
 		</form>
 	{/each}
 </section>
+
